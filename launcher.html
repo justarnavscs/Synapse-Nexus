@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Synapse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6f0ff 0%, #d1e3ff 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        /* Decorative elements */
+        .decoration {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(120deg, rgba(173, 216, 230, 0.2), rgba(135, 206, 250, 0.15));
+            position: absolute;
+            top: -70px;
+            right: -70px;
+        }
+
+        .circle-2 {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 218, 185, 0.2), rgba(255, 228, 196, 0.15));
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+        }
+
+        /* Header styles */
+        .header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 15px 10px 10px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 400;
+            max-width: 300px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* Time and date */
+        .time-display {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 12px 20px;
+            margin: 10px auto 15px;
+            width: 90%;
+            max-width: 280px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        #time {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #3498db;
+            letter-spacing: -1px;
+            margin-bottom: 3px;
+        }
+
+        #date {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* Search bar */
+        .search-container {
+            position: relative;
+            margin: 0 auto 15px;
+            width: 90%;
+            max-width: 350px;
+            z-index: 10;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 16px;
+            padding-left: 45px;
+            border-radius: 25px;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            font-size: 0.95rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(52, 152, 219, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        /* Grid container */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            padding: 8px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* App card styles */
+        .app-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            aspect-ratio: 1/1;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: appEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* Staggered animation */
+        .app-card:nth-child(1) { animation-delay: 0.1s; }
+        .app-card:nth-child(2) { animation-delay: 0.2s; }
+        .app-card:nth-child(3) { animation-delay: 0.3s; }
+        .app-card:nth-child(4) { animation-delay: 0.4s; }
+        .app-card:nth-child(5) { animation-delay: 0.5s; }
+        .app-card:nth-child(6) { animation-delay: 0.6s; }
+        .app-card:nth-child(7) { animation-delay: 0.7s; }
+        .app-card:nth-child(8) { animation-delay: 0.8s; }
+        .app-card:nth-child(9) { animation-delay: 0.9s; }
+
+        @keyframes appEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(-5px) scale(1.03);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .app-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.05),
+                0 3px 8px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Color accents for different categories */
+        .app-card:nth-child(3n+1) .app-content:hover {
+            background: rgba(236, 240, 252, 0.8);
+        }
+        .app-card:nth-child(3n+2) .app-content:hover {
+            background: rgba(252, 240, 240, 0.8);
+        }
+        .app-card:nth-child(3n+3) .app-content:hover {
+            background: rgba(240, 252, 240, 0.8);
+        }
+
+        .app-content:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 8px 22px rgba(0, 0, 0, 0.08),
+                0 5px 15px rgba(0, 0, 0, 0.05);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .app-icon {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .app-content:hover .app-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+        }
+
+        .app-title {
+            text-align: center;
+            color: #34495e;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0 4px;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .app-content:hover .app-title {
+            transform: translateY(2px);
+            opacity: 1;
+            color: #2c3e50;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px 0 10px;
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 10;
+            margin-top: 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 10px 5px 5px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.85rem;
+            }
+            
+            .time-display {
+                padding: 10px 15px;
+                border-radius: 14px;
+                max-width: 260px;
+            }
+            
+            #time {
+                font-size: 2rem;
+            }
+            
+            #date {
+                font-size: 0.85rem;
+            }
+            
+            .grid-container {
+                gap: 12px;
+                padding: 5px;
+            }
+            
+            .app-content {
+                border-radius: 16px;
+            }
+            
+            .app-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .app-title {
+                font-size: 0.7rem;
+            }
+            
+            .search-box {
+                padding: 12px 14px;
+                padding-left: 40px;
+                font-size: 0.9rem;
+            }
+            
+            .search-icon {
+                font-size: 1rem;
+                left: 14px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .grid-container {
+                gap: 10px;
+            }
+            
+            .app-icon {
+                width: 36px;
+                height: 36px;
+                margin-bottom: 6px;
+            }
+            
+            .app-title {
+                font-size: 0.65rem;
+            }
+            
+            .time-display {
+                max-width: 240px;
+            }
+        }
+
+        /* Landscape orientation */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .header, .time-display, .search-container {
+                display: none;
+            }
+            
+            .grid-container {
+                gap: 8px;
+                padding: 5px;
+                max-width: 100%;
+            }
+            
+            .app-card {
+                aspect-ratio: 1/1;
+            }
+            
+            body {
+                padding: 8px;
+                justify-content: center;
+            }
+            
+            .footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration circle"></div>
+    <div class="decoration circle-2"></div>
+    
+    <div class="header">
+        <h1>Synapse Nexus</h1>
+        <p>Your productivity hub for all essential tools</p>
+    </div>
+    
+    <div class="time-display">
+        <div id="time">10:24 AM</div>
+        <div id="date">Thursday, May 29, 2025</div>
+    </div>
+    
+    <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-box" placeholder="Search apps...">
+    </div>
+    
+    <div class="grid-container">
+        <!-- Apps will be generated by JavaScript -->
+    </div>
+    
+    <div class="footer">
+        <br>
+        <p> <br> Synapse OS • Version 2.5</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.querySelector('.grid-container');
+            
+            // Update time and date
+            function updateDateTime() {
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const date = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                
+                document.getElementById('time').textContent = time;
+                document.getElementById('date').textContent = date;
+            }
+            
+            // Initial call and set interval
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            
+            // Define apps with names, icons, and launch paths
+            const apps = [
+                { name: "Notes", icon: "Notes.png", path: "Notes.html" },
+                { name: "About Us", icon: "About.png", path: "AAbout.html" },
+                { name: "Calendar", icon: "Calendar.png", path: "Calendar.html" },
+                { name: "CEH v12", icon: "Ceh.jpg", path: "CEH V12.html" },
+                { name: "Voice Recorder", icon: "Recorder.png", path: "Recorder.html" },
+                { name: "File Manager", icon: "File-Manager.png", path: "Files.html" },
+                { name: "Clock", icon: "Clock.png", path: "index-Clock.html" },
+                { name: "OneShot Course", icon: "OneShot.png", path: "Oneshot.html" },
+                { name: "Calculator", icon: "Calculator.png", path: "Calculator.html" }
+            ];
+            
+            // Create app cards
+            apps.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                
+                const content = document.createElement('div');
+                content.className = 'app-content';
+                content.onclick = () => { 
+                    // Animation on click
+                    content.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        window.location.href = app.path;
+                    }, 200);
+                };
+                
+                const icon = document.createElement('img');
+                icon.src = app.icon;
+                icon.className = 'app-icon';
+                icon.alt = `${app.name} Icon`;
+                
+                const title = document.createElement('div');
+                title.className = 'app-title';
+                title.textContent = app.name;
+                
+                content.appendChild(icon);
+                card.appendChild(content);
+                card.appendChild(title);
+                container.appendChild(card);
+            });
+            
+            // Search functionality
+            const searchBox = document.querySelector('.search-box');
+            searchBox.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const appCards = document.querySelectorAll('.app-card');
+                
+                appCards.forEach(card => {
+                    const appName = card.querySelector('.app-title').textContent.toLowerCase();
+                    if (appName.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+    </html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Svqlx©</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .calculator-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 30px;
+            background: rgba(25, 25, 35, 0.9);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent 30%
+            );
+            animation: rotate 6s linear infinite;
+            z-index: -1;
+        }
+
+        .display {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(15, 15, 25, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .display::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .history {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 1.1rem;
+            text-align: right;
+            height: 25px;
+            overflow: hidden;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .current-input {
+            color: white;
+            font-size: 2.5rem;
+            text-align: right;
+            font-weight: 300;
+            height: 55px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .btn {
+            position: relative;
+            height: 70px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(30, 30, 45, 0.8);
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active::before {
+            opacity: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active:hover {
+            transform: scale(0.92) translateY(0);
+        }
+
+        .operator {
+            background: rgba(255, 149, 0, 0.2);
+            color: #ff9500;
+            font-weight: 500;
+        }
+
+        .operator.active {
+            background: #ff9500;
+            color: white;
+        }
+
+        .equals {
+            background: linear-gradient(135deg, #ff9500, #ff5e3a);
+            color: white;
+            font-weight: 500;
+        }
+
+        .clear, .delete, .percent {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ff5e3a;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+        .footer {
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 20px;
+                border-radius: 25px;
+            }
+            
+            .btn {
+                height: 65px;
+                font-size: 1.5rem;
+            }
+            
+            .display {
+                height: 110px;
+                padding: 15px;
+            }
+            
+            .current-input {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <br>
+    
+    <br> <br>    <div class="calculator-container">
+        <br>  <div class="display">
+            <div class="history"></div>
+            <div class="current-input">0</div>
+        </div>
+        
+        <div class="buttons-grid">
+            <button class="btn clear">AC</button>
+            <button class="btn delete">DEL</button>
+            <button class="btn percent">%</button>
+            <button class="btn operator">÷</button>
+            
+            <button class="btn">7</button>
+            <button class="btn">8</button>
+            <button class="btn">9</button>
+            <button class="btn operator">×</button>
+            
+            <button class="btn">4</button>
+            <button class="btn">5</button>
+            <button class="btn">6</button>
+            <button class="btn operator">-</button>
+            
+            <button class="btn">1</button>
+            <button class="btn">2</button>
+            <button class="btn">3</button>
+            <button class="btn operator">+</button>
+            
+            <button class="btn zero">0</button>
+            <button class="btn">.</button>
+            <button class="btn equals">=</button>
+        </div>
+        
+        <div class="footer">
+            SVQLX© VERIFIED CALCULATOR. Info.svqlx@gmail.com
+          Note - SVQLX is not a Gov or published Org
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const display = document.querySelector('.current-input');
+            const historyDisplay = document.querySelector('.history');
+            const buttons = document.querySelectorAll('.btn');
+            let currentInput = '0';
+            let previousInput = '';
+            let operation = null;
+            let shouldResetDisplay = false;
+            
+            // Add ripple effect to buttons
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+            
+            // Update display
+            function updateDisplay() {
+                display.textContent = currentInput;
+                display.classList.add('pulse');
+                setTimeout(() => display.classList.remove('pulse'), 300);
+            }
+            
+            // Update history
+            function updateHistory() {
+                historyDisplay.textContent = previousInput + (operation ? ' ' + getOperationSymbol(operation) : '');
+            }
+            
+            // Get operation symbol for display
+            function getOperationSymbol(op) {
+                switch(op) {
+                    case 'add': return '+';
+                    case 'subtract': return '−';
+                    case 'multiply': return '×';
+                    case 'divide': return '÷';
+                    default: return '';
+                }
+            }
+            
+            // Reset calculator
+            function resetCalculator() {
+                currentInput = '0';
+                previousInput = '';
+                operation = null;
+                shouldResetDisplay = false;
+                updateDisplay();
+                updateHistory();
+            }
+            
+            // Delete last character
+            function deleteLastChar() {
+                if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
+                    currentInput = '0';
+                } else {
+                    currentInput = currentInput.slice(0, -1);
+                }
+                updateDisplay();
+            }
+            
+            // Append number
+            function appendNumber(number) {
+                if (shouldResetDisplay) {
+                    currentInput = '0';
+                    shouldResetDisplay = false;
+                }
+                
+                if (currentInput === '0' && number !== '.') {
+                    currentInput = number;
+                } else {
+                    // Prevent multiple decimals
+                    if (number === '.' && currentInput.includes('.')) return;
+                    
+                    currentInput += number;
+                }
+                
+                // Format large numbers
+                if (currentInput.length > 12) {
+                    currentInput = parseFloat(currentInput).toExponential(6);
+                }
+                
+                updateDisplay();
+            }
+            
+            // Choose operation
+            function chooseOperation(op) {
+                // If there's a previous operation and user didn't press equals
+                if (operation && !shouldResetDisplay) {
+                    calculate();
+                }
+                
+                previousInput = currentInput;
+                operation = op;
+                shouldResetDisplay = true;
+                
+                // Highlight active operator
+                document.querySelectorAll('.operator').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Highlight the current operator button
+                const operatorBtns = document.querySelectorAll('.operator');
+                const targetBtn = Array.from(operatorBtns).find(btn => {
+                    return btn.textContent === getOperationSymbol(op);
+                });
+                
+                if (targetBtn) {
+                    targetBtn.classList.add('active');
+                }
+                
+                updateHistory();
+            }
+            
+            // Calculate result
+            function calculate() {
+                if (!operation || shouldResetDisplay) return;
+                
+                const prev = parseFloat(previousInput);
+                const current = parseFloat(currentInput);
+                let result;
+                
+                switch(operation) {
+                    case 'add':
+                        result = prev + current;
+                        break;
+                    case 'subtract':
+                        result = prev - current;
+                        break;
+                    case 'multiply':
+                        result = prev * current;
+                        break;
+                    case 'divide':
+                        if (current === 0) {
+                            result = 'Error';
+                        } else {
+                            result = prev / current;
+                        }
+                        break;
+                    default:
+                        return;
+                }
+                
+                // Format result
+                if (result === 'Error') {
+                    currentInput = result;
+                } else {
+                    // Handle very large/small numbers
+                    if (Math.abs(result) > 999999999999 || Math.abs(result) < 0.000000001) {
+                        currentInput = result.toExponential(8);
+                    } else {
+                        // Format to remove unnecessary decimal places
+                        currentInput = result.toString();
+                        if (currentInput.includes('.')) {
+                            const decimalPlaces = currentInput.split('.')[1].length;
+                            if (decimalPlaces > 8) {
+                                currentInput = result.toFixed(8);
+                            }
+                        }
+                    }
+                }
+                
+                operation = null;
+                shouldResetDisplay = true;
+                updateDisplay();
+                updateHistory();
+            }
+            
+            // Calculate percentage
+            function calculatePercentage() {
+                const current = parseFloat(currentInput);
+                currentInput = (current / 100).toString();
+                updateDisplay();
+            }
+            
+            // Event listeners for buttons
+            document.querySelector('.clear').addEventListener('click', resetCalculator);
+            document.querySelector('.delete').addEventListener('click', deleteLastChar);
+            document.querySelector('.percent').addEventListener('click', calculatePercentage);
+            document.querySelector('.equals').addEventListener('click', calculate);
+            
+            // Number buttons
+            document.querySelectorAll('.btn:not(.operator):not(.clear):not(.delete):not(.percent):not(.equals)').forEach(button => {
+                button.addEventListener('click', () => {
+                    appendNumber(button.textContent);
+                });
+            });
+            
+            // Operator buttons
+            document.querySelectorAll('.operator').forEach(button => {
+                button.addEventListener('click', () => {
+                    switch(button.textContent) {
+                        case '+':
+                            chooseOperation('add');
+                            break;
+                        case '−':
+                            chooseOperation('subtract');
+                            break;
+                        case '×':
+                            chooseOperation('multiply');
+                            break;
+                        case '÷':
+                            chooseOperation('divide');
+                            break;
+                    }
+                });
+            });
+            
+            // Initialize calculator
+            resetCalculator();
+        });
+    </script>
+    <br> <br>
+    <button class="fab" onclick="document.getElementById('note-text').focus()"></button>
+
+    <button class="dark-mode-btn" onclick="toggleDarkMode()"></button>
+    <a href="launcher.html">
+        <button style="position: absolute; top: 20px; left: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
+          Back to Main Screen
+        </button>
+        
+</body>
+</html>

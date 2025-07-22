@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Command Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+
+  <style>
+    /* Base reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(120deg, #0f0f1c, #1e2b45);
+      font-family: 'Open Sans', sans-serif;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Star overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(74, 222, 222, 0.3);
+      animation: fadeIn 2s ease forwards;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #4ADEDE;
+      text-shadow: 0 0 12px #4ADEDE;
+    }
+
+    p {
+      font-size: 1em;
+      margin-bottom: 25px;
+      color: #cccccc;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 1em;
+      text-decoration: none;
+      border: 2px solid #4ADEDE;
+      border-radius: 8px;
+      color: #4ADEDE;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #4ADEDE;
+      color: #0f0f1c;
+      box-shadow: 0 0 10px #4ADEDE;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: #aaa;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Synapse Nexus</h1>
+    <p>Welcome to Synapse Nexus</p>
+
+    <a href="https://justarnavexe.wixsite.com/codenexus" class="btn" target="_blank">SVQLX 1.1 Alpha</a>
+    <a href="launcher.html" class="btn" target="_blank">Launch</a>
+
+    <footer>Proudly Represented by Synapse Nexus</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Learning Modules</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Rasputin';
+            src: url('https://fonts.cdnfonts.com/s/14898/Rasputin.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4e54c8;
+            --primary-dark: #363a9c;
+            --secondary: #6c757d;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --card-bg: #ffffff;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --part1-bg: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+            --part2-bg: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Decorative background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--primary-dark);
+            top: 30%;
+            left: 75%;
+            animation-delay: 4s;
+        }
+
+        .circle-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--accent);
+            top: 70%;
+            left: 15%;
+            animation-delay: 6s;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            animation: fadeInDown 1s ease-out;
+            position: relative;
+            z-index: 3;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 3.2rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-family: 'Rasputin', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            max-width: 700px;
+            margin: 20px auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .modules-section {
+            margin: 40px 0;
+            padding: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-family: 'Rasputin', 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            color: var(--primary-dark);
+            display: inline-block;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(78, 84, 200, 0.3), transparent);
+            z-index: 0;
+        }
+
+        .part-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .part-card {
+            flex: 1;
+            min-width: 450px;
+            max-width: 550px;
+            height: 500px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            animation: cardAppear 0.8s ease-out;
+            animation-fill-mode: both;
+            text-decoration: none;
+        }
+
+        .part1 {
+            background: var(--part1-bg);
+            animation-delay: 0.2s;
+        }
+
+        .part2 {
+            background: var(--part2-bg);
+            animation-delay: 0.4s;
+        }
+
+        .part-content {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .part-number {
+            font-family: 'Rasputin', 'Poppins', sans-serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.15);
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            transition: var(--transition);
+            z-index: 1;
+            line-height: 1;
+        }
+
+        .part-card:hover .part-number {
+            transform: scale(1.1);
+            opacity: 0.2;
+        }
+
+        .part-icon {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .part-card:hover .part-icon {
+            transform: scale(1.1) rotate(10deg);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .part-title {
+            font-family: 'Rasputin', 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .part-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            max-width: 400px;
+            line-height: 1.7;
+        }
+
+        .module-count {
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .part-card:hover .module-count {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .access-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            pointer-events: none; /* Fix for overlapping click areas */
+        }
+
+        .part1 .access-btn {
+            color: var(--primary);
+        }
+
+        .part2 .access-btn {
+            color: var(--accent);
+        }
+
+        .access-btn i {
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .access-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .access-btn:hover i {
+            transform: translateX(6px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-top: 40px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 3;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .part-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .part-card {
+                min-width: 100%;
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .part-card {
+                height: 450px;
+            }
+            
+            .logo h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.4rem;
+            }
+            
+            .part-title {
+                font-size: 2.4rem;
+            }
+            
+            .part-content {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .part-card {
+                min-width: 100%;
+                height: 400px;
+            }
+            
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .part-title {
+                font-size: 2rem;
+            }
+            
+            .part-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .part-number {
+                font-size: 6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .part-card {
+                height: 380px;
+            }
+            
+            .part-title {
+                font-size: 1.8rem;
+            }
+            
+            .access-btn {
+                padding: 14px 35px;
+                font-size: 1rem;
+            }
+            
+            .part-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-elements">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="circle circle-4"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>™SVQLX ©®</h1>
+            </div>
+            <p class="subtitle">Access our comprehensive curriculum through two specialized learning paths designed for professional development and skill enhancement.</p>
+        </header>
+
+        <section class="modules-section">
+            <div class="section-title">
+                <h2>Learning Paths</h2>
+            </div>
+            
+            <div class="part-container">
+                <!-- Part 1 -->
+                <a href="https://drive.google.com/drive/folders/1-7Gbx40DbfjwuR5A7lQJ9_V1vEXbxWy9" class="part-card part1">
+                    <div class="part-content">
+                        <div class="part-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h2 class="part-title">PART 1: FOUNDATIONS</h2>
+                        <p class="part-subtitle">Master the essential building blocks of professional knowledge through our comprehensive foundational curriculum.</p>
+                        <div class="module-count">12 MODULES</div>
+                        <div class="access-btn">Explore Part 1 <i class="fas fa-arrow-right"></i></div>
+                        <div class="part-number">I</div>
+                    </div>
+                </a>
+                
+                <!-- Part 2 -->
+                <a href="https://drive.google.com/drive/folders/1-AjLNZtNTLBbIN9RTKKmqJMhps7CRWD_" class="part-card part2">
+                    <div class="part-content">
+                        <div class="part-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h2 class="part-title">PART 2: ADVANCEMENT</h2>
+                        <p class="part-subtitle">Elevate your expertise with advanced concepts and specialized skills for professional mastery.</p>
+                        <div class="module-count">12 MODULES</div>
+                        <div class="access-btn">Explore Part 2 <i class="fas fa-arrow-right"></i></div>
+                        <div class="part-number">II</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Elevate your professional journey.</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to all part cards
+            const partCards = document.querySelectorAll('.part-card');
+            
+            partCards.forEach(card => {
+                // Initial animation
+                card.style.animation = 'pulse 4s infinite ease-in-out';
+                
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-15px)';
+                    card.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.25)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.15)';
+                });
+            });
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('.access-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size/2;
+                    const y = e.clientY - rect.top - size/2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+    </script>
+        <button class="fab" onclick="document.getElementById('note-text').focus()">+</button>
+
+    <button class="dark-mode-btn" onclick="toggleDarkMode()"></button>
+    <a href="launcher.html">
+        <button style="position: absolute; top: 20px; left: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
+          Back to Main Screen
+        </button>
+</body>
+</html>

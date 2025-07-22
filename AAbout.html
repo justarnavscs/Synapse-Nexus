@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVQLX | Professional Links</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0a0a12;
+            --secondary-dark: #161622;
+            --tertiary-dark: #1e1e2d;
+            --accent-color: #4CAF50;
+            --accent-hover: #3d8b40;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0) 20%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), #2d7a30);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #b0f0b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: var(--tertiary-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .nav-btn:hover {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: rgba(76, 175, 80, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .main-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ffffff, #b0f0b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            font-weight: 300;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .link-card {
+            background: var(--tertiary-dark);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all var(--transition-speed) ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: var(--card-shadow);
+            animation: slideUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .link-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .link-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .link-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .link-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            min-height: 60px;
+        }
+
+        .link-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition-speed) ease;
+            border: 2px solid transparent;
+        }
+
+        .link-btn:hover {
+            background: transparent;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .link-btn i {
+            margin-left: 8px;
+        }
+
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--tertiary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Delay animations for cards */
+        .link-card:nth-child(1) { animation-delay: 0.1s; }
+        .link-card:nth-child(2) { animation-delay: 0.2s; }
+        .link-card:nth-child(3) { animation-delay: 0.3s; }
+        .link-card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .links-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                <div class="logo-text">SVQLX</div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-envelope"></i> Contact
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <h1 class="title">Explore my Portfolio</h1>
+            <p class="subtitle">Connect with me through my professional channels and explore my work</p>
+            
+            <div class="links-container">
+                <div class="link-card">
+                    <div class="link-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3 class="link-title">YouTube Channel</h3>
+                    <p class="link-desc">Explore my tutorials, projects, and tech insights on my YouTube channel.</p>
+                    <a href="https://youtube.com/@svqlx-admin?si=aSOBhUpcz_M01BRv" target="_blank" class="link-btn">
+                        Visit Channel <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="link-title">Email Contact</h3>
+                    <p class="link-desc">Reach out for collaborations, inquiries, or professional opportunities.</p>
+                    <a href="mailto:info.svqlx@gmail.com" class="link-btn">
+                        Send Email <i class="fas fa-paper-plane"></i>
+                    </a>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="link-title">Replit Projects</h3>
+                    <p class="link-desc">Browse my coding projects and experiments on Replit.</p>
+                    <a href="https://replit.com/@arnavagarwalrnc" target="_blank" class="link-btn">
+                        View Projects <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                
+                <div class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="link-title">Code Nexus</h3>
+                    <p class="link-desc">Visit my development hub for resources, projects, and insights.</p>
+                    <a href="https://justarnavexe.wixsite.com/codenexus" target="_blank" class="link-btn">
+                        Visit Site <i class="fas fa-laptop-code"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 SVQLX. All rights reserved. Designed with passion for technology.</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Simple animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.link-card');
+            
+            // Add animation class when element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'slideUp 0.8s ease-out forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Button hover effects
+            const buttons = document.querySelectorAll('.link-btn, .nav-btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

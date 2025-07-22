@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Keeper</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        .dark-mode body {
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+        }
+
+        .app-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode .app-container {
+            background-color: #444;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4caf50;
+            letter-spacing: 1px;
+        }
+
+        .note-input {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #4caf50, #81c784);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .notes-list {
+            margin-top: 30px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            transition: grid-template-columns 0.3s ease;
+        }
+
+        .note {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .note:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .note p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .empty-message {
+            font-size: 1.2rem;
+            color: #888;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #4caf50;
+            color: white;
+            font-size: 2rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Dark mode toggle button */
+        .dark-mode-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode-btn:hover {
+            background-color: #555;
+        }
+
+        /* Styled Scrollbars */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4caf50;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #388e3c;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <h1>Note Keeper</h1>
+        <div class="note-input">
+            <textarea id="note-text" placeholder="Take a note..."></textarea>
+            <button onclick="addNote()">Add Note</button>
+        </div>
+        <div id="notes-list" class="notes-list">
+            <!-- Notes will appear here -->
+        </div>
+        <div id="empty-message" class="empty-message" style="display: none;">
+            No notes yet! Start by adding one.
+        </div>
+    </div>
+
+    <button class="fab" onclick="document.getElementById('note-text').focus()">+</button>
+
+    <button class="dark-mode-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <a href="launcher.html">
+        <button style="position: absolute; top: 20px; left: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
+          Back to Main Screen
+        </button>
+      </a>
+
+    <script>
+        // Load notes from localStorage or initialize as an empty array
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let darkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Function to display notes
+        function displayNotes() {
+            const notesList = document.getElementById('notes-list');
+            const emptyMessage = document.getElementById('empty-message');
+
+            notesList.innerHTML = ""; // Clear existing notes
+
+            if (notes.length === 0) {
+                emptyMessage.style.display = 'block'; // Show empty message
+            } else {
+                emptyMessage.style.display = 'none'; // Hide empty message
+            }
+
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+
+                const noteText = document.createElement('p');
+                noteText.textContent = note;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-btn');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteNote(index);
+
+                noteElement.appendChild(noteText);
+                noteElement.appendChild(deleteButton);
+
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        // Function to add a new note
+        function addNote() {
+            const noteInput = document.getElementById('note-text');
+            const noteText = noteInput.value.trim();
+
+            if (noteText !== "") {
+                notes.push(noteText);
+                noteInput.value = "";
+                saveNotes();
+                displayNotes();
+            }
+        }
+
+        // Function to delete a note
+        function deleteNote(index) {
+            notes.splice(index, 1); // Remove note from the array
+            saveNotes();
+            displayNotes();
+        }
+
+        // Function to save notes to localStorage
+        function saveNotes() {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            localStorage.setItem('darkMode', darkMode);
+            document.body.classList.toggle('dark-mode', darkMode);
+            displayNotes();
+        }
+
+        // Initial display of notes and dark mode setup
+        document.body.classList.toggle('dark-mode', darkMode);
+        displayNotes();
+    </script>
+
+</body>
+</html>

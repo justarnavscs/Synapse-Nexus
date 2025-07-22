@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Synapse Nexus</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      color: #00fdfd;
+      overflow: hidden;
+    }
+    #backdrop {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: radial-gradient(circle at center, #001f3f, #000);
+      animation: swirl 25s ease-in-out infinite;
+      background-size: 300% 300%;
+      z-index: -1;
+    }
+    @keyframes swirl {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .panel {
+      width: 400px;
+      margin: 8vh auto;
+      padding: 2rem;
+      background: rgba(0,255,255,0.07);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      box-shadow: 0 0 30px #00fdfd;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #00ffff;
+      letter-spacing: 1px;
+    }
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      background: rgba(0,255,255,0.1);
+      color: white;
+    }
+    input:focus {
+      box-shadow: 0 0 15px #00fdfd;
+      background: rgba(0,255,255,0.2);
+      outline: none;
+    }
+    button {
+      background-color: #00fdfd;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .status {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 6px;
+      min-height: 1.2em;
+    }
+    .shake {
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+    }
+  </style>
+</head>
+<body>
+<div id="backdrop"></div>
+
+<div class="panel" id="loginPanel">
+  <h2>🔐 Login Portal</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <input id="pinInput" type="password" maxlength="4" placeholder="Enter 4-digit PIN">
+  <button onclick="handleLogin()">Login</button>
+  <button onclick="triggerRecovery()">🔄 Forgot PIN?</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const credentials = {
+  "owner": "owner@Arnav@SVQLX",
+  "admin": "admin@19566",
+  "operator": "Ops@@1SVQLX",
+  "user1": "user12337",
+  "user2": "user@ussr@20013",
+"user3": "user@ITprog@777",
+"user4": "user@58392",
+"user5": "user@72914",
+"user6": "user@36107",
+"user7": "user@10485",
+"user8": "user@59234",
+"user9": "user@87321",
+"user10": "user@34876",
+"user11": "user@91542",
+"user12": "user@68703",
+"user13": "user@40712",
+"user14": "user@52098",
+"user15": "user@30271",
+"user16": "user@68340",
+"user17": "user@44579",
+"user18": "user@24567",
+"user19": "user@78902",
+"user20": "user@43056",
+"user21": "user@53789",
+"user22": "user@27845",
+"user23": "user@64021",
+"user24": "user@91432",
+"user25": "user@35908",
+"user26": "user@72643",
+"user27": "user@80329",
+"user28": "user@14257",
+"user29": "user@65879",
+"user30": "user@91862",
+"user31": "user@70543",
+"user32": "user@32867",
+"user33": "user@47691",
+"user34": "user@53480",
+"user35": "user@28573",
+"user36": "user@69014",
+"user37": "user@84129",
+"user38": "user@42075",
+"user39": "user@37981",
+"user40": "user@95837",
+"user41": "user@61724",
+"user42": "user@30498",
+"user43": "user@87260",
+"user44": "user@46923",
+"user45": "user@74130",
+"user46": "user@52867",
+"user47": "user@19345",
+"user48": "user@65980",
+"user49": "user@82714",
+"user50": "user@37462"
+};
+
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const pinInput = document.getElementById("pinInput");
+const status = document.getElementById("status");
+const loginPanel = document.getElementById("loginPanel");
+
+let recoveryMode = false;
+
+username.addEventListener("input", () => {
+  const cleanUser = username.value.trim();
+  status.innerText = cleanUser
+    ? credentials.hasOwnProperty(cleanUser)
+      ? "✅ Username recognized"
+      : "❌ Unknown user"
+    : "";
+});
+
+function handleLogin() {
+  const rawUser = username.style.display === "none"
+    ? localStorage.getItem("lastUser")
+    : username.value;
+  const cleanUser = rawUser.trim();
+  const cleanPassword = password.value.trim();
+  const cleanPin = pinInput.value.trim();
+  const storedPin = localStorage.getItem("pin_" + cleanUser);
+
+  if (!/^[\w\d]+$/.test(cleanUser)) {
+    status.innerText = "❌ Invalid username format";
+    shakePanel();
+    return;
+  }
+
+  if (!credentials.hasOwnProperty(cleanUser)) {
+    status.innerText = "❌ Unknown user";
+    shakePanel();
+    return;
+  }
+
+  if (recoveryMode) {
+    if (credentials[cleanUser] !== cleanPassword) {
+      status.innerText = "❌ Incorrect password";
+      shakePanel();
+      return;
+    }
+
+    if (/^\d{4}$/.test(cleanPin)) {
+      localStorage.setItem("pin_" + cleanUser, cleanPin);
+      localStorage.setItem("lastUser", cleanUser);
+      status.innerText = "✅ PIN reset successful!";
+      recoveryMode = false;
+      setTimeout(() => window.location.href = "qwerty.html", 800);
+    } else {
+      status.innerText = "❌ Enter a valid 4-digit new PIN";
+      shakePanel();
+    }
+    return;
+  }
+
+  // ✅ FIXED: Enforce password check during first-time login
+  if (!storedPin) {
+    if (credentials[cleanUser] !== cleanPassword) {
+      status.innerText = "❌ Incorrect password";
+      shakePanel();
+      return;
+    }
+
+    if (/^\d{4}$/.test(cleanPin)) {
+      localStorage.setItem("pin_" + cleanUser, cleanPin);
+      localStorage.setItem("lastUser", cleanUser);
+      status.innerText = "✅ PIN set. Login successful!";
+      setTimeout(() => window.location.href = "qwerty.html", 800);
+    } else {
+      status.innerText = "❌ Please enter a 4-digit PIN";
+      shakePanel();
+    }
+    return;
+  }
+
+  if (cleanPin === storedPin) {
+    localStorage.setItem("lastUser", cleanUser);
+    status.innerText = "✅ Login successful!";
+    setTimeout(() => window.location.href = "qwerty.html", 800);
+  } else {
+    status.innerText = "❌ Incorrect PIN";
+    shakePanel();
+  }
+}
+
+function triggerRecovery() {
+  recoveryMode = true;
+  username.style.display = "block";
+  password.style.display = "block";
+  pinInput.placeholder = "Set a new 4-digit PIN";
+  document.querySelector("h2").innerText = "🔄 Recover Access";
+  status.innerText = "Enter username, password, and new PIN";
+}
+
+function shakePanel() {
+  loginPanel.classList.add("shake");
+  setTimeout(() => loginPanel.classList.remove("shake"), 400);
+}
+
+window.onload = () => {
+  const lastUser = localStorage.getItem("lastUser");
+  const storedPin = lastUser ? localStorage.getItem("pin_" + lastUser) : null;
+
+  if (lastUser && storedPin) {
+    username.style.display = "none";
+    password.style.display = "none";
+    pinInput.placeholder = `Enter PIN for ${lastUser}`;
+    document.querySelector("h2").innerText = `🔢 PIN Login`;
+  }
+};
+</script>
+</body>
+</html>
